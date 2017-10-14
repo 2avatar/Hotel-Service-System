@@ -2,7 +2,7 @@
 
 int static generatorId = Person::START_ID;
 
-Person::Person(const Person& other) : name(NULL)
+Person::Person(const Person& other)
 {
 	*this = other;
 }
@@ -12,13 +12,12 @@ const Person & Person::operator=(const Person & other)
 	if (this != &other)
 	{
 		Person::id = other.id;
-		delete[] name;
-		Person::name = _strdup(other.name);
+		Person::name = other.name;
 	}
 	return *this;
 }
 
-Person::Person(const char * name) throw(const char *)
+Person::Person(const string& name) throw(const char *)
 {
 	id = generatorId;
 	generatorId++;
@@ -28,17 +27,21 @@ Person::Person(const char * name) throw(const char *)
 
 Person::~Person()
 {
-	delete[] name;
 }
 
-void Person::toOs(std::ostream & os) const 
+bool Person::operator==(const Person & other) const
+{
+		return getId() == other.getId();
+}
+
+void Person::toOs(std::ostream & os) const
 {
 }
 
-void Person::setName(const char * name) throw(const char *)
+void Person::setName(const string& name) throw(const char *)
 {
-	if (name != nullptr)
-		Person::name = _strdup(name);
+	if (!name.empty())
+		Person::name = name;
 	else
 		throw "Invalid name.\n";
 }
@@ -48,7 +51,7 @@ int Person::getId() const
 	return id;
 }
 
-const char * Person::getName() const
+const string& Person::getName() const
 {
 	return name;
 }
@@ -56,7 +59,7 @@ const char * Person::getName() const
 std::ostream & operator<<(std::ostream & os, const Person & e)
 {
 	os << "id: " << e.getId() << "\n";
-	os << "name: " << e.getName() << "\n";
+	os << "name: " << e.getName().c_str() << "\n";
 	e.toOs(os);
 	return os;
 }

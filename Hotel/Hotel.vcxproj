@@ -146,26 +146,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Decorateable.h" />
     <ClInclude Include="diningRoom.h" />
     <ClInclude Include="employee.h" />
     <ClInclude Include="hotel.h" />
     <ClInclude Include="houseKeeper.h" />
+    <ClInclude Include="IncreaseSalaryVisitor.h" />
+    <ClInclude Include="IteratorFunctions.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="person.h" />
     <ClInclude Include="receptionist.h" />
     <ClInclude Include="room.h" />
+    <ClInclude Include="RoomForAnniversary.h" />
+    <ClInclude Include="RoomForBirthday.h" />
+    <ClInclude Include="RoomProperty.h" />
     <ClInclude Include="roomService.h" />
     <ClInclude Include="shiftManager.h" />
     <ClInclude Include="suite.h" />
+    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="diningRoom.cpp" />
     <ClCompile Include="employee.cpp" />
     <ClCompile Include="hotel.cpp" />
     <ClCompile Include="houseKeeper.cpp" />
+    <ClCompile Include="IncreaseSalaryVisitor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="person.cpp" />
     <ClCompile Include="receptionist.cpp" />
     <ClCompile Include="room.cpp" />
+    <ClCompile Include="RoomForAnniversary.cpp" />
+    <ClCompile Include="RoomForBirthday.cpp" />
+    <ClCompile Include="RoomProperty.cpp" />
     <ClCompile Include="roomService.cpp" />
     <ClCompile Include="shiftManager.cpp" />
     <ClCompile Include="suite.cpp" />

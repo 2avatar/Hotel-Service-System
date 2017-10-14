@@ -25,10 +25,10 @@ void ShiftManager::toOs(std::ostream & os) const
 	os << "Title: Shift Manager\n";
 }
 
-void ShiftManager::handleComplaint(int roomNumber, const char * complaint) const throw(const char *)
+void ShiftManager::handleComplaint(int roomNumber, const string& complaint) const throw(const char *)
 {
 	if (roomNumber > 0)
-		std::cout << getName() << " is handling room number: " << roomNumber << "complaint saying " << complaint << ".\n";
+		std::cout << getName().c_str() << " is handling room number: " << roomNumber << ", complaint saying " << complaint << ".\n";
 	else
 		throw "Invalid room number.\n";
 }

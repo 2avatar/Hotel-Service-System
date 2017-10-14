@@ -1,67 +1,32 @@
 #include "hotel.h"
 
-Hotel::Hotel(const char * name) throw(const char *)
+Hotel Hotel::theHotel;
+
+Hotel::Hotel() throw(const char *)
 {
 	numOfFloors = Receptionist::NUM_OF_FLOORS;
 	numOfRoomsPerFloor = Receptionist::NUM_OF_ROOMS_PER_FLOOR;
 	int numOfRooms = numOfFloors*numOfRoomsPerFloor;
 	numOfUsedRooms = 0;
-	numOfEmployees = 0;
-	setName(name);
+	name = "theHotel";
 	diningRoom = new DiningRoom(numOfRooms, (Room::MAX_NUM_OF_BEDS)*numOfRooms);
-	allEmployees = new Employee*[MAX_EMPLOYEES];
-	rooms = new Room*[numOfRooms];
-	initArrays();
-}
-
-Hotel::Hotel(const Hotel & other)
-{
-	*this = other;
-}
-
-const Hotel & Hotel::operator=(const Hotel & other)
-{
-	if (this != &other)
-	{
-		Hotel::name = _strdup(name);
-		Hotel::numOfFloors = other.numOfFloors;
-		Hotel::numOfRoomsPerFloor = other.numOfRoomsPerFloor;
-		Hotel::numOfUsedRooms = other.numOfUsedRooms;
-		Hotel::numOfEmployees = other.numOfEmployees;
-		for (int i = 0; i < other.numOfEmployees; i++)
-			allEmployees[i] = other.allEmployees[i];
-		for (int i = 0; i < numOfFloors*numOfRoomsPerFloor; i++)
-			rooms[i] = other.rooms[i];
-
-		Hotel::diningRoom = other.diningRoom;
-	}
-	return *this;
+	initRooms();
 }
 
 Hotel::~Hotel()
 {
-
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-			delete allEmployees[i];
-	}
-	for (int i = 0; i < numOfFloors*numOfRoomsPerFloor; i++)
-	{
-		if (rooms[i] != nullptr)
-			delete rooms[i];
-	}
-
-	delete[] allEmployees;
-	delete[] rooms;
 	delete[] diningRoom;
-	delete[] name;
 }
 
-void Hotel::setName(const char * name) throw(const char *)
+Hotel* Hotel::getInstance()
 {
-	if (name != nullptr)
-		Hotel::name = _strdup(name);
+	return &theHotel;
+}
+
+void Hotel::setName(const string& name) throw(const char *)
+{
+	if (!name.empty())
+		Hotel::name = name;
 	else
 		throw "Invalid name.\n";
 }
@@ -71,7 +36,7 @@ int Hotel::getNumOfFloors() const
 	return numOfFloors;
 }
 
-const char * Hotel::getName() const
+const string& Hotel::getName() const
 {
 	return name;
 }
@@ -86,80 +51,53 @@ int Hotel::getNumOfUsedRooms() const
 	return numOfUsedRooms;
 }
 
-Employee ** Hotel::getAllEmployees() const
+vector<Employee*> Hotel::getAllEmployees() const
 {
 	return allEmployees;
 }
 
-Room ** Hotel::getRooms() const
+vector<Room*> Hotel::getRooms() const
 {
 	return rooms;
 }
 
-int Hotel::isGuestExist(Person * guest) const
+int Hotel::isGuestExist(Person * guest)
 {
-	for (int i = 0; i < numOfFloors*numOfRoomsPerFloor; i++)
+	for (int i = 0; i < rooms.size(); i++)
 	{
-		if (rooms[i]->isGuestExist((*guest).getId()))
+		if (rooms[i]->isGuestExist(*guest))
 			return rooms[i]->getRoomNumber();
 	}
 	return Room::GUEST_NOT_EXIST;
 }
-
 
 bool Hotel::isRoomOccupied(int roomNumber)
 {
 	return rooms[roomNumber]->getNumberOfGuests() > 0;
 }
 
-
-
-Receptionist & Hotel::getReceptionist() const
+Receptionist& Hotel::getReceptionist() const
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-			if (strcmp(typeid(*allEmployees[i]).name(), typeid(Receptionist).name()) == 0)
-				return dynamic_cast<Receptionist&>(*allEmployees[i]);
-	}
 	Receptionist* r = nullptr;
-	return *r;
+	return getEmployeeByType(allEmployees, *r);
 }
 
 const RoomService & Hotel::getRoomService() const
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-			if (strcmp(typeid(*allEmployees[i]).name(), typeid(RoomService).name()) == 0)
-				return dynamic_cast<RoomService&>((*allEmployees[i]));
-	}
 	RoomService* r = nullptr;
-	return *r;
+	return getEmployeeByType(allEmployees, *r);
 }
 
 const HouseKeeper & Hotel::getHouseKeeper() const
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-			if (strcmp(typeid(*allEmployees[i]).name(), typeid(HouseKeeper).name()) == 0)
-				return dynamic_cast<HouseKeeper&>((*allEmployees[i]));
-	}
-	HouseKeeper* h = nullptr;
-	return *h;
+	HouseKeeper* r = nullptr;
+	return getEmployeeByType(allEmployees, *r);
 }
 
 const ShiftManager & Hotel::getShiftManager() const
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-			if (strcmp(typeid(*allEmployees[i]).name(), typeid(ShiftManager).name()) == 0)
-				return dynamic_cast<ShiftManager&>((*allEmployees[i]));
-	}
-	ShiftManager* s = nullptr;
-	return *s;
+	ShiftManager* r = nullptr;
+	return getEmployeeByType(allEmployees, *r);
 }
 
 const DiningRoom& Hotel::getDiningRoom() const
@@ -167,130 +105,130 @@ const DiningRoom& Hotel::getDiningRoom() const
 	return *diningRoom;
 }
 
-int Hotel::checkIn(Person ** guests, int numOfGuests)
+int Hotel::checkIn(const vector<Person*> guests, int numOfGuests, int userChoiceForDecoration, int roomDecoratorValue)
 {
 	Receptionist& r = getReceptionist();
-	if (&r != nullptr) {
 
-		int roomAvailable = r.checkRoomAvailability(numOfGuests, rooms);
-		if (roomAvailable != Receptionist::NO_ROOM_AVAILBLE)
-		{
-			for (int i = 0; i < numOfGuests; i++)
-			{
-				(*rooms[roomAvailable - 1]).checkInGuest((*guests[i]));
-			}
-			numOfUsedRooms++;
-		}
-		return roomAvailable;
+	if (&r == nullptr)
+		return Receptionist::NO_ROOM_AVAILBLE;
+
+	int roomNumberAvailable = r.checkRoomAvailability(numOfGuests, rooms);
+
+	if (roomNumberAvailable == Receptionist::NO_ROOM_AVAILBLE)
+		return Receptionist::NO_ROOM_AVAILBLE;
+
+	Room* roomAvailable;
+
+	// get room by id
+	roomAvailable = rooms[roomNumberAvailable - 1];
+
+	switch (userChoiceForDecoration)
+	{
+	default:
+	case 0:
+	{
+		roomAvailable->decorateRoom();
+		break;
 	}
-	return Receptionist::NO_ROOM_AVAILBLE;
+	case 1:
+	{
+		Decorateable* birthdayRoom = new RoomForBirthday(roomAvailable, roomDecoratorValue);
+		birthdayRoom->decorateRoom();
+		break;
+	}
+	case 2:
+	{
+		Decorateable* anniversaryRoom = new RoomForAnniversary(roomAvailable, roomDecoratorValue);
+		anniversaryRoom->decorateRoom();
+		break;
+	}
+	}
+
+	// check in guests
+	if (roomAvailable != nullptr)
+	{
+		int end = guests.size();
+		int start = end - numOfGuests;
+		for (int i = start; i < end; i++)
+			roomAvailable->checkInGuest(*guests[i]);
+
+		numOfUsedRooms++;
+
+		std::cout << "Hosting Guests: \n";
+		std::cout << roomAvailable->getGuests() << "\n";
+	}
+	return roomNumberAvailable;
 }
 
 void Hotel::checkOut(int roomNumber)
 {
-	if ((*rooms[roomNumber - 1]).getNumberOfGuests() > 0) {
-		(*rooms[roomNumber - 1]).checkOutGuests(roomNumber);
-		numOfUsedRooms--;
-	}
+	Room* room;
+
+	room = rooms[roomNumber - 1];
+
+	if (room != nullptr)
+		if (room->getNumberOfGuests() > 0)
+		{
+			room->checkOutGuests(roomNumber);
+			numOfUsedRooms--;
+		}
 }
 
-void Hotel::initArrays()
+void Hotel::initRooms()
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-		allEmployees[i] = nullptr;
-
 	int indexHelper = 0;
 	for (int i = 0; i < numOfFloors; i++)
-		for (int j = 0; j < numOfRoomsPerFloor; j++) {
-			if (i < numOfFloors - 1) {
-				rooms[indexHelper] = new Room(indexHelper + 1, i + 1, (Room::MIN_ROOM_SIZE) + (i * 10));
-				++indexHelper;
-			}
+		for (int j = 0; j < numOfRoomsPerFloor; j++)
+		{
+			if (i < numOfFloors - 1)
+				rooms.push_back(new Room(indexHelper + 1, i + 1, (Room::MIN_ROOM_SIZE) + (i * 10)));
 			// last floor is for suites only;
-			else {
-				rooms[indexHelper] = new Suite(indexHelper + 1, i + 1, (Room::MIN_ROOM_SIZE) + (i * 10), Suite::MIN_BALCONY_SIZE + (j * 2));
-				++indexHelper;
-			}
+			else
+				rooms.push_back(new Suite(indexHelper + 1, i + 1, (Room::MIN_ROOM_SIZE) + (i * 10), Suite::MIN_BALCONY_SIZE + (j * 2)));
+			++indexHelper;
 		}
-
 }
 
-void Hotel::increaseAllEmployeesSalary(float amount)
+void Hotel::acceptEmployees(IVisitor* visitor)
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++) {
-		if (allEmployees[i] != nullptr)
-		allEmployees[i]->setSalary(allEmployees[i]->getSalary() + amount);
-	}
+	acceptGeneric(allEmployees, visitor);
 }
 
 const Hotel & Hotel::operator+=(Employee & newEmployee)
 {
-	if (numOfEmployees < MAX_EMPLOYEES) {
-		for (int i = 0; i < MAX_EMPLOYEES; i++) {
-			if (allEmployees[i] == nullptr) {
-				allEmployees[numOfEmployees] = &newEmployee;
-				numOfEmployees++;
-				break;
-			}
-		}
-	}
+	allEmployees.push_back(&newEmployee);
 	return *this;
 }
 
-const Hotel & Hotel::operator-=(Employee & fireEmployee)
+const Hotel & Hotel::operator-=(Employee & employee)
 {
-	removeEmployee(fireEmployee.getId());
+	fireEmployee(employee.getId());
 	return *this;
 }
 
-
-
-void Hotel::removeEmployee(int id)
+void Hotel::fireEmployee(int id)
 {
-	for (int i = 0; i < MAX_EMPLOYEES; i++) {
-		if (allEmployees[i] != nullptr) {
-			if (allEmployees[i]->getId() == id) {
-				allEmployees[i] = nullptr;
-				numOfEmployees--;
-				break;
-			}
-		}
-	}
+	removeEmployee(allEmployees, id);
 }
 
 std::ostream & Hotel::showHotelEmployees(std::ostream & os) const
 {
-	// print employees
-	for (int i = 0; i < MAX_EMPLOYEES; i++)
-	{
-		if (allEmployees[i] != nullptr)
-		{
-			os << *allEmployees[i] << "\n";
-		}
-	}
-	return os;
+	return printAll(allEmployees, os);
 }
 
 std::ostream & Hotel::showHotelDetails(std::ostream & os) const
 {
-	os << "Hotel " << getName() << ":\n";
+	os << "Hotel " << getName().c_str() << ":\n";
 	os << "Number of floors: " << getNumOfFloors() << "\n";
 	os << "Number of rooms per floor: " << getNumOfRoomsPerFloor() << "\n";
 	os << "Number of used rooms: " << getNumOfUsedRooms() << "\n";
-	os << "Number of employees: " << numOfEmployees << "\n";
+	os << "Number of employees: " << getAllEmployees().size() << "\n";
 
 	return os;
 }
 std::ostream & Hotel::showHotelRooms(std::ostream & os) const
 {
-	for (int i = 0; i < numOfFloors*numOfRoomsPerFloor; i++)
-	{
-		if (rooms[i] != nullptr)
-		{
-			os << *rooms[i] << "\n";
-		}
-	}
-	return os;
+	return printAll(rooms, os);
 }
 
 std::ostream & Hotel::showHotelDiningRoom(std::ostream & os) const
@@ -298,6 +236,7 @@ std::ostream & Hotel::showHotelDiningRoom(std::ostream & os) const
 	os << *diningRoom;
 	return os;
 }
+
 void Hotel::openDRGates() const
 {
 	diningRoom->openGates();
@@ -310,10 +249,10 @@ void Hotel::closeDRGates() const
 
 void Hotel::registerRoomToDR(int roomNumber)
 {
-	*diningRoom += roomNumber;
+	diningRoom += roomNumber;
 }
 
-bool Hotel::handleComplaint(int roomNumber, const char* complaint) const
+bool Hotel::handleComplaint(int roomNumber, const string& complaint) const
 {
 	const ShiftManager& sm = getShiftManager();
 
@@ -383,4 +322,6 @@ std::ostream & operator<<(std::ostream & os, const Hotel & e)
 
 	return os;
 }
+
+
 

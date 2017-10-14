@@ -16,7 +16,7 @@ public:
 
 	void toOs(std::ostream& os) const;
 
-	void handleComplaint(int roomNumber, const char* complaint) const throw (const char*);
+	void handleComplaint(int roomNumber, const string& complaint) const throw (const char*);
 
 };
 

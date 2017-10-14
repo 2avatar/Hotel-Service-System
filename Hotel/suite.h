@@ -18,7 +18,7 @@ public:
 
 	Suite(int roomNumber, int numOfBeds, int size, int balconySize);
 	virtual void toOs(std::ostream& os) const;
-
+	virtual void decorateRoom() const;
 	void setBalconySize(int balconySize) throw (const char*);
 
 	int getBalconySize() const;

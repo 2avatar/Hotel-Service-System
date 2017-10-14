@@ -8,37 +8,43 @@
 #include "diningRoom.h"
 #include "houseKeeper.h"
 #include "shiftManager.h"
+#include "IteratorFunctions.h"
+#include "RoomForBirthday.h"
+#include "RoomForAnniversary.h"
+#include "IncreaseSalaryVisitor.h"
 class Hotel
 {
 private:
-	char* name;
-	int numOfFloors , numOfRoomsPerFloor, numOfUsedRooms, numOfEmployees;
-	Employee** allEmployees;
-	Room** rooms;
+
+	static Hotel theHotel;
+
+	string name;
+	int numOfFloors , numOfRoomsPerFloor, numOfUsedRooms;
+	vector<Employee*> allEmployees;
+	vector<Room*> rooms;
 	DiningRoom* diningRoom;
+
+	Hotel();
+	Hotel(const Hotel& other);
+	const Hotel& operator= (const Hotel& other);
 
 public:
 
-	static const int MAX_EMPLOYEES = 50;
-
-	Hotel(const char* name) throw (const char*);
-	Hotel(const Hotel& other);
-	const Hotel& operator= (const Hotel& other);
 	~Hotel();
-
-	friend std::ostream& operator<< (std::ostream& os, const Hotel& e);
+	static Hotel* getInstance();
+	friend std::ostream& operator<<(std::ostream& os, const Hotel& e);
 
 	// getters and setters
-	void setName(const char* name) throw (const char*);
+	void setName(const string& name) throw (const char*);
 
 	int getNumOfFloors() const;
-	const char* getName()	const;
+	const string& getName()	const;
 	int getNumOfRoomsPerFloor() const;
 	int getNumOfUsedRooms() const;
-	Employee** getAllEmployees() const;
-	Room** getRooms() const;
+	vector<Employee*> getAllEmployees() const;
+	vector<Room*> getRooms() const;
 
-	int isGuestExist(Person* guest) const;
+	int isGuestExist(Person* guest);
 	bool isRoomOccupied(int roomNumber);
 	Receptionist& getReceptionist() const;
 
@@ -50,21 +56,20 @@ public:
 
 	const DiningRoom& getDiningRoom() const;
 
-	int checkIn(Person** guests, int numOfGuests);  //rooms.checkInGuests(guests) return the room number
-	void checkOut(int roomNumber);  //rooms.checkOutGuests(roomNumber)
+	int checkIn(vector<Person*> guests, int numOfGuests, int decorationType, int roomDecoratorValue);  //rooms.checkInGuests(guests) return the room number
+	void checkOut(int roomNumber) ;  //rooms.checkOutGuests(roomNumber)
 
-	void initArrays();
-	void increaseAllEmployeesSalary(float amount); // increase the salary for all the employees
+	void initRooms();
+	void acceptEmployees(IVisitor* visitor); // increase the salary for all the employees
 	//adding an Employee to the allEmployee array
 	const Hotel& operator+= (Employee& newEmployee);
 
 	/*removing an Employee from the allEmployee array.*/
-	const Hotel& operator-= (Employee& fireEmployee);
-	void removeEmployee(int id);
-
-	std::ostream & Hotel::showHotelDetails(std::ostream & os) const;
-
+	const Hotel& operator-= (Employee& employee);
+	void fireEmployee(int id);
 	std::ostream& showHotelEmployees(std::ostream& os) const;
+
+	std::ostream& showHotelDetails(std::ostream& os) const;
 
 	std::ostream& showHotelRooms(std::ostream& os) const;
 
@@ -74,7 +79,7 @@ public:
 	void closeDRGates() const;
 
 	void registerRoomToDR(int roomNumber);
-	bool handleComplaint(int roomNumber, const char* complaint) const;
+	bool handleComplaint(int roomNumber, const string& complaint) const;
 	bool serveRoom(int roomNumber) const;
 	bool cleanRoom(int roomNumber) const;
 	bool cleanAllRooms() const;

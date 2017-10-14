@@ -33,6 +33,11 @@ void Employee::setSalary(float salary) throw(const char *)
 		throw "You are fired!!!";
 }
 
+void Employee::accept(IVisitor * visitor)
+{
+	visitor->visit(this);
+}
+
 float Employee::getSalary() const
 {
  	return salary;

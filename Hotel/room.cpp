@@ -6,7 +6,6 @@ Room::Room(int roomNumber, int numOfBeds, int size) throw(const char *)
 	setNumOfBeds(numOfBeds);
 	setSize(size);
 	numberOfGuests = INIT_NUM_GUEST;
-	guests = new const Person*[numOfBeds];
 }
 
 Room::Room(const Room & other)
@@ -15,11 +14,7 @@ Room::Room(const Room & other)
 }
 
 Room::~Room()
-{
-	for (int i = 0; i < numberOfGuests; i++)
-		delete[] guests[i];
-
-	delete[] guests;
+{	
 }
 
 const Room & Room::operator=(const Room & other)
@@ -37,20 +32,20 @@ const Room & Room::operator=(const Room & other)
 
 void Room::toOs(std::ostream & os) const {}
 
+void Room::decorateRoom() const
+{
+	cout << "\n *.** Chocolates are waiting in your room **.* \n";
+}
+
 const Room & Room::operator+=(const Person & person)
 {
-
-	if (numberOfGuests <= numOfBeds) {
-		guests[numberOfGuests] = &person;
-		++numberOfGuests;
-	}
+	guests += person;
+	numberOfGuests++;
 	return *this;
 }
 
 void Room::initArray()
 {
-	for (int i = 0; i < numOfBeds; i++)
-		guests[i] = nullptr;
 }
 
 void Room::setRoomNumber(int roomNumber) throw(const char *)
@@ -77,7 +72,7 @@ void Room::setSize(int size) throw(const char *)
 		throw "The rooms in this hotel are at the range of 50-200 square meter.\n";
 }
 
-const Person ** Room::getGuests() const
+const LinkedList<Person>& Room::getGuests() const
 {
 	return guests;
 }
@@ -102,16 +97,11 @@ int Room::getSize() const
 	return size;
 }
 
-int Room::isGuestExist(int id) const
+int Room::isGuestExist(const Person& guest)
 {
 	// if there are guests
-	if (numberOfGuests > 0) {
-		for (int i = 0; i < numberOfGuests; i++)
-		{
-			if ((*guests[i]).getId() == id)
-				return roomNumber;
-		}
-	}
+	if (guests.isExists(guest))
+		return roomNumber;
 	return GUEST_NOT_EXIST;
 }
 
@@ -122,8 +112,7 @@ void Room::checkInGuest(const Person & guest)
 
 void Room::checkOutGuests(int roomNumber)
 {
-	for (int i = 0; i < numberOfGuests; i++)
-		guests[i] = nullptr;
+	guests.deleteAll();
 	numberOfGuests = INIT_NUM_GUEST;
 }
 
@@ -131,14 +120,6 @@ Room Room::operator++(int)
 {
 	numberOfGuests++;
 	return *this;
-}
-
-const Person & Room::operator[](int index) const throw(const char *)
-{ 
-	if ((index >= 0) && (index < numberOfGuests))
-		return (*guests[index]);
-	else
-		throw "Invalid index.\n";
 }
 
 std::ostream & operator<<(std::ostream & os, const Room & e)
@@ -153,8 +134,7 @@ std::ostream & operator<<(std::ostream & os, const Room & e)
 	if (e.numberOfGuests > 0)
 	{
 		os << "Guests: \n";
-		for (int i=0; i<e.getNumberOfGuests(); i++)
-		os << *e.getGuests()[i];
+		os << e.guests;
 	}
 	else
 		os << "Room has no guests \n";

@@ -1,14 +1,18 @@
 ﻿  suite.cpp
   shiftManager.cpp
   roomService.cpp
+  RoomProperty.cpp
+  RoomForBirthday.cpp
+  RoomForAnniversary.cpp
   room.cpp
   receptionist.cpp
   person.cpp
   main.cpp
-c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\main.cpp(404): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+  IncreaseSalaryVisitor.cpp
   houseKeeper.cpp
   hotel.cpp
-c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\hotel.cpp(369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\hotel.cpp(150): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\hotel.cpp(308): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   employee.cpp
   diningRoom.cpp
   Generating Code...

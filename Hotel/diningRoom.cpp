@@ -1,38 +1,12 @@
 #include "diningRoom.h"
-const char* DiningRoom::eStatus[] = { "Open", "Close" };
+
+const string DiningRoom::eStatus[] = { "Open", "Close" };
 
 DiningRoom::DiningRoom(int numOfTables, int numOfChairs) throw(const char *)
 {
 	setNumOfTables(numOfTables);
 	setNumOfChairs(numOfChairs);
 	DiningRoom::status = CLOSE;
-	DiningRoom::numOfRegisteredRooms = INIT_SIZE;
-	DiningRoom::roomsRegistered = new int[numOfTables] {0};
-}
-
-DiningRoom::~DiningRoom()
-{
-	delete[] roomsRegistered;
-}
-
-DiningRoom::DiningRoom(const DiningRoom & other)
-{
-	*this = other;
-}
-
-const DiningRoom & DiningRoom::operator=(const DiningRoom & other)
-{
-	if (this != &other)
-	{
-		DiningRoom::numOfTables = other.numOfTables;
-		DiningRoom::numOfChairs = other.numOfChairs;
-		DiningRoom::status = other.status;
-		DiningRoom::numOfRegisteredRooms = other.numOfRegisteredRooms;
-		DiningRoom::roomsRegistered = new int[numOfTables];
-		for (int i = 0; i < numOfRegisteredRooms; i++)
-			DiningRoom::roomsRegistered[i] = other.roomsRegistered[i];
-	}
-	return *this;
 }
 
 void DiningRoom::setNumOfTables(int numOfTables) throw(const char *)
@@ -63,31 +37,24 @@ int DiningRoom::getNumOfChairs() const
 
 const DiningRoom & DiningRoom::operator+=(int roomNumber)
 {
-	if (numOfRegisteredRooms < numOfTables)
-	{
-		for (int i = 0; i < numOfTables; i++)
-		{
-			if (roomsRegistered[i] == NULL) {
-				roomsRegistered[i] = roomNumber;
-				numOfRegisteredRooms++;
-				break;
-			}
-		}
-	}
+	roomsRegistered.push_back(roomNumber);
+
 	return *this;
 }
 
 const DiningRoom & DiningRoom::operator-=(int roomNumber)
 {
-
-	for (int i = 0; i < numOfTables; i++)
+	vector<int>::iterator itrBegin = roomsRegistered.begin();
+	vector<int>::iterator itrEnd = roomsRegistered.end();
+	for (; itrBegin != itrEnd; ++itrBegin) 
 	{
-		if (roomsRegistered[i] == roomNumber) {
-			roomsRegistered[i] = NULL;
-			numOfRegisteredRooms--;
+		if (*itrBegin == roomNumber)
+		{
+			roomsRegistered.erase(itrBegin);
 			break;
 		}
 	}
+
 	return *this;
 }
 
@@ -99,22 +66,26 @@ void DiningRoom::openGates()
 void DiningRoom::closeGates()
 {
 	DiningRoom::status = CLOSE;
-
-	for (int i = 0; i < numOfTables; i++)
-			roomsRegistered[i] = NULL;
-
-	numOfRegisteredRooms = 0;
+	roomsRegistered.clear();
 }
 
 std::ostream & operator<<(std::ostream & os, const DiningRoom & e)
 {
-	os << "Number of chairs: " << e.numOfChairs << "\n";
-	os << "Number of tables: " << e.numOfTables << "\n";
+	vector<int>::const_iterator itrBegin = e.roomsRegistered.begin();
+	vector<int>::const_iterator itrEnd = e.roomsRegistered.end();
+
+	os << "Number of Chairs: " << e.numOfChairs << "\n";
+	os << "Number of Tables: " << e.numOfTables << "\n";
 	os << "Status: " << e.eStatus[e.status] << "\n";
-	os << "Rooms registered:\n";
-	for (int i = 0; i < e.numOfRegisteredRooms; i++)
+	if (e.roomsRegistered.size() == e.INIT_SIZE)
+		os << "No Current Rooms Registered \n";
+	else
 	{
-		os << "Room number: " << e.roomsRegistered[i] << "\n";
+	os << "Rooms Registered: \n";
+	for ( ; itrBegin != itrEnd ; ++itrBegin)
+	{
+		os << "Room Number: " << *itrBegin << "\n";
+	}
 	}
 	return os;
 }

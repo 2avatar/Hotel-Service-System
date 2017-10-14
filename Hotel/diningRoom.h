@@ -7,23 +7,19 @@ class DiningRoom
 {
 public:
 	enum Status { OPEN, CLOSE };
-	const static char* eStatus[];
+	const static string eStatus[];
 
 private:
 	int numOfTables;
 	int numOfChairs;
-	int* roomsRegistered; // array that will keep the room numbers whick registered to the meals
+	vector<int> roomsRegistered;
 	Status status;
-	int numOfRegisteredRooms; //keep the number of current room registered
+	
 public:
-
 	static const int INIT_SIZE = 0;
 	static const int MIN_NUM_SIZE = 0;
 
 	DiningRoom(int numOfTables, int numOfChairs) throw (const char*);
-	~DiningRoom();
-	DiningRoom(const DiningRoom& other);
-	const DiningRoom& operator= (const DiningRoom& other);
 	friend std::ostream& operator<< (std::ostream& os, const DiningRoom& e);
 
 	//getters and setters

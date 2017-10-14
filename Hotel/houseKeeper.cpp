@@ -20,12 +20,12 @@ void HouseKeeper::toOs(std::ostream & os) const
 void HouseKeeper::cleanRoom(int roomNumber) const throw(const char *)
 {
 	if (roomNumber > 0)
-		std::cout << getName() << " is cleaning room number: " << roomNumber << ".\n";
+		std::cout << getName().c_str() << " is cleaning room number: " << roomNumber << ".\n";
 	else
 		throw "Invalid room number.\n";
 }
 
 void HouseKeeper::cleanAllRooms() const
 {
-	std::cout << getName() << " is cleaning all rooms in hotel.\n";
+	std::cout << getName().c_str() << " is cleaning all rooms in hotel.\n";
 }

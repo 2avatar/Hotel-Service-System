@@ -20,7 +20,7 @@ public:
 	Receptionist(const char* name, float salary) throw (const char*);
 	virtual void toOs(std::ostream& os) const;
 
-	virtual int checkRoomAvailability(int numberOfGuests, Room** rooms) throw (const char*); // return the matching room for this size of guests
+	virtual int checkRoomAvailability(int numberOfGuests, vector<Room*> rooms) const throw (const char*); // return the matching room for this size of guests
 	virtual void collectPayment(int roomNumber, float amount) throw (const char*);
 };
 

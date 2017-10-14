@@ -28,5 +28,5 @@ void RoomService::serveRoom(int roomNumber) const throw(const char *)
 {
 	if (roomNumber < 0)
 		throw "Invalid room number.\n";
-	std::cout << "Room number " << roomNumber << " got service from: " << getName() << ".\n";
+	std::cout << "Room number " << roomNumber << " got service from: " << getName().c_str() << ".\n";
 }

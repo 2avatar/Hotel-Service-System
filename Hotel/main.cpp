@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-// PART 2
+// Part 3
 
 static const int DEFAULT_VAL = 0;
 static const int INVALID_ID = 0;
@@ -14,21 +14,18 @@ static const int DECORATE_BIRTHDAY = 1;
 static const int DECORATE_ANNIVERSARY = 2;
 static const int SALARY_TO_EMPLOYEES = 235;
 static const int ROOM_PAYMENT = 700;
-static const int MAX_GUESTS = 20;
-static const int MAX_NAME_LENGTH = 20;
-static const int MAX_COMPLAINT_LENGTH = 50;
 
 void showMenu();
 void setHotelEmployees(Hotel& theHotel);
 void fireEmployee(Hotel & theHotel);
-void checkInGuests(Hotel& theHotel, Person**& guests, int& sizeOfGuestsArr);
+void checkInGuests(Hotel& theHotel, vector<Person*>& guests);
 void checkOutGuests(Hotel& theHotel);
-void checkIfGuestExists(Hotel & theHotel, Person**& guests, int& sizeOfGuestsArr);
+void checkIfGuestExists(Hotel & theHotel, vector<Person*>& guests);
 void openDiningRoomGates(Hotel& theHotel);
 void closeDiningRoomGates(Hotel & theHotel);
 void registerRoomToDiningRoom(Hotel& theHotel);
 void handleComplaint(Hotel& theHotel);
-void getComplaint(char*& complaint);
+void getComplaint(string& complaint);
 void serveRoomByNumber(Hotel& theHotel);
 void cleanRoomByNumber(Hotel& theHotel);
 void cleanAllRooms(Hotel& theHotel);
@@ -41,21 +38,23 @@ void showDiningRoomDetails(Hotel& theHotel);
 int getRoomNumber(Hotel& hotel);
 void checkValidInput();
 void clearBuffer();
-int isValidId(Person**& guests, int& id, int& sizeOfGuestsArr);
+int isValidId(vector<Person*> vec, int id);
 void getNumberOfGuestsFromUser(int& numOfGuests);
-void addGuests(Person**& guests, int& numOfGuests);
+void addGuests(vector<Person*>& guests, int& numOfGuests);
+void setDecoratorByUser(int& response, int& roomDecoratorValue, int& userChoiceForDecoration);
 
 void main()
 {
 	try
-	{ 
-	Hotel theHotel("MyHotel");
-	Person** guests = new Person*[MAX_GUESTS];
-	int sizeOfGuestsArr = 0;
+	{
+		string name = "MyHotel";
+		Hotel* theHotel = Hotel::getInstance();
+		vector<Person*> guests;
 
 		int choice = 0;
 		while (choice != -1)
 		{
+			
 			choice = 0;
 			showMenu();
 			cin >> choice;
@@ -66,88 +65,88 @@ void main()
 			{
 			case 1:
 			{
-				setHotelEmployees(theHotel);
+				setHotelEmployees(*theHotel);
 				break;
 			}
 			case 2:
 			{
-				fireEmployee(theHotel);
+				fireEmployee(*theHotel);
 				break;
 			}
 			case 3:
-				increaseSalaryToEmployees(theHotel);
+				increaseSalaryToEmployees(*theHotel);
 				break;
 			case 4:
 			{
-				checkInGuests(theHotel, guests, sizeOfGuestsArr);
+				checkInGuests(*theHotel, guests);
 				break;
 			}
 			case 5:
 			{
-				checkOutGuests(theHotel);
+				checkOutGuests(*theHotel);
 				break;
 			}
 			case 6: 	
 			{
-				checkIfGuestExists(theHotel, guests, sizeOfGuestsArr);
+				checkIfGuestExists(*theHotel, guests);
 				break;
 			}
 			case 7: 
 			{
-				openDiningRoomGates(theHotel);
+				openDiningRoomGates(*theHotel);
 				break;
 			}
 			case 8:
 			{
-				closeDiningRoomGates(theHotel);
+				closeDiningRoomGates(*theHotel);
 				break;
 			}
 			case 9:
 			{
-				registerRoomToDiningRoom(theHotel);
+				registerRoomToDiningRoom(*theHotel);
 				break;
 			}
 			case 10:
 			{
-				handleComplaint(theHotel);
+				handleComplaint(*theHotel);
 				break;
 			}
 			case 11:
 			{		
-				serveRoomByNumber(theHotel);
+				serveRoomByNumber(*theHotel);
 				break;
 			}
 			case 12:
 			{
-				cleanRoomByNumber(theHotel);
+				cleanRoomByNumber(*theHotel);
 				break;
 			}
 			case 13:
-				cleanAllRooms(theHotel);
+				cleanAllRooms(*theHotel);
 				break;
 			case 14:
 			{
-				collectPaymentFromRoom(theHotel);
+				collectPaymentFromRoom(*theHotel);
 				break;
 			}
 			case 15:
 			{
-				showHotelDetails(theHotel);
+				showHotelDetails(*theHotel);
 				break;
 			}
 			case 16:
 			{
-				showEmployeesDetails(theHotel);
+				showEmployeesDetails(*theHotel);
 				break;
 			}
 			case 17:
 			{
-				showAllRoomsDetails(theHotel);
+				showAllRoomsDetails(*theHotel);
 				break;
 			}
 			case 18:
 			{
-				showDiningRoomDetails(theHotel);
+				showDiningRoomDetails(*theHotel);
 				break;
 			}
 			case -1:
@@ -168,7 +167,7 @@ void main()
 
 void setHotelEmployees(Hotel& theHotel)
 {
-	Employee* shiftManager = new ShiftManager("Momo", Employee::MIN_SALARY+ 50.5);
+	Employee* shiftManager = new ShiftManager("Momo", Employee::MIN_SALARY + 50.5);
 	Employee* receptionist1 = new Receptionist("Lolo", Employee::MIN_SALARY + 45.0);
 	Employee* receptionist2 = new Receptionist("Popo", Employee::MIN_SALARY + 23.5);
 	Employee* houseKeeper = new HouseKeeper("Coco", Employee::MIN_SALARY + 22);
@@ -196,14 +195,14 @@ void fireEmployee(Hotel & theHotel)
 
 	if (employeeId > INVALID_ID)
 	{
-		theHotel.removeEmployee(employeeId);
+		theHotel.fireEmployee(employeeId);
 		cout << "employee was fired" << endl;
 	}
 	else
 		cout << "Invalid id " << endl;
 }
 
-void checkInGuests(Hotel & theHotel, Person**& guests, int& sizeOfGuestsArr)
+void checkInGuests(Hotel & theHotel, vector<Person*>& guests)
 {
 	int numOfGuests = DEFAULT_VAL;
 	int userChoiceForDecoration = DECORATE_NON;
@@ -212,12 +211,11 @@ void checkInGuests(Hotel & theHotel, Person**& guests, int& sizeOfGuestsArr)
 
 	getNumberOfGuestsFromUser(numOfGuests);
 	addGuests(guests, numOfGuests);
+	setDecoratorByUser(response, roomDecoratorValue, userChoiceForDecoration);
 
-	int roomNumber = theHotel.checkIn(guests, numOfGuests);
-	if (roomNumber > Receptionist::NO_ROOM_AVAILBLE) {
+	int roomNumber = theHotel.checkIn(guests, numOfGuests, userChoiceForDecoration, roomDecoratorValue);
+	if (roomNumber > Receptionist::NO_ROOM_AVAILBLE)
 		cout << "The guests are now in room number: " << roomNumber << endl;
-		sizeOfGuestsArr += numOfGuests;
-	}
 	else
 		cout << "No Room or Recepetionist available " << endl;
 }
@@ -233,14 +231,43 @@ void getNumberOfGuestsFromUser(int& numOfGuests)
 	cin.ignore(1, '\n');
 }
 
-void addGuests(Person**& guests, int& numOfGuests)
+void addGuests(vector<Person*>& guests, int& numOfGuests)
 {
 	for (int i = 0; i < numOfGuests; i++)
 	{
-		char* name = new char[MAX_NAME_LENGTH];
+		string name;
 		cout << "Enter guest #" << (i + 1) << " name: ";
-		cin.getline(name, MAX_NAME_LENGTH-1);
-		guests[i] = new Person(name);
+		getline(cin, name);
+		guests.push_back(new Person(name));
+	}
+}
+
+void setDecoratorByUser(int& response, int& roomDecoratorValue, int& userChoiceForDecoration)
+{
+	cout << "Is it your Anniversary? 1/0: ";
+	cin >> response;
+	checkValidInput();
+
+	if (!response)
+	{
+		cout << "Is it your Birthday? 1/0: ";
+		cin >> response;
+		checkValidInput();
+
+		if (response)
+		{
+			cout << "Diameter of cake: ";
+			cin >> roomDecoratorValue;
+			checkValidInput();
+			userChoiceForDecoration = DECORATE_BIRTHDAY;
+		}
+	}
+	else
+	{
+		cout << "Amount of baloons: ";
+		cin >> roomDecoratorValue;
+		checkValidInput();
+		userChoiceForDecoration = DECORATE_ANNIVERSARY;
 	}
 }
 
@@ -253,10 +280,10 @@ void checkOutGuests(Hotel & theHotel)
 
 	if (roomForCheckOut > Receptionist::NO_ROOM_AVAILBLE)
 		theHotel.checkOut(roomForCheckOut);
-
+	
 }
 
-void checkIfGuestExists(Hotel & theHotel, Person**& guests, int& sizeOfGuestsArr)
+void checkIfGuestExists(Hotel & theHotel, vector<Person*>& guests)
 {
 	int id, personId;
 
@@ -264,7 +291,7 @@ void checkIfGuestExists(Hotel & theHotel, Person**& guests, int& sizeOfGuestsArr
 	cin >> id;
 	checkValidInput();
 
-	personId = isValidId(guests, id, sizeOfGuestsArr);
+	personId = isValidId(guests, id);
 	if (personId == INVALID_INDEX)
 		cout << "Invalid id" << endl;
 	else
@@ -302,6 +329,7 @@ void registerRoomToDiningRoom(Hotel & theHotel)
 
 void handleComplaint(Hotel & theHotel)
 {
+
 	int roomNumber = getRoomNumber(theHotel);
 			
 	if (roomNumber == Receptionist::NO_ROOM_AVAILBLE)
@@ -309,7 +337,7 @@ void handleComplaint(Hotel & theHotel)
 
 	clearBuffer();
 
-	char* complaint = new char[MAX_COMPLAINT_LENGTH];
+	string complaint;
 	getComplaint(complaint);
 	
 
@@ -320,10 +348,10 @@ void handleComplaint(Hotel & theHotel)
 
 }
 
-void getComplaint(char*& complaint)
+void getComplaint(string& complaint)
 {
 	cout << "what is your complaint? ";
-	cin.getline(complaint, MAX_COMPLAINT_LENGTH-1);
+	getline(cin, complaint);
 }
 
 void serveRoomByNumber(Hotel & theHotel)
@@ -340,11 +368,11 @@ void serveRoomByNumber(Hotel & theHotel)
 
 }
 
-int isValidId(Person**& guests, int& id ,int& sizeOfGuestsArr)
+int isValidId(vector<Person*> vec, int id)
 {
-	for (int i = 0; i < sizeOfGuestsArr; i++)
+	for (int i = 0; i < vec.size(); i++)
 	{
-		if (guests[i]->getId() == id)
+		if (vec[i]->getId() == id)
 			return i;
 	}
 	return INVALID_INDEX;
@@ -401,7 +429,7 @@ void collectPaymentFromRoom(Hotel & theHotel)
 
 void increaseSalaryToEmployees(Hotel & theHotel)
 {
-	theHotel.increaseAllEmployeesSalary(SALARY_TO_EMPLOYEES);
+	theHotel.acceptEmployees(new IncraseSalaryVisitor(SALARY_TO_EMPLOYEES));
 	cout << "Increased all employees salary by " << SALARY_TO_EMPLOYEES << "$ " << endl;
 }
 

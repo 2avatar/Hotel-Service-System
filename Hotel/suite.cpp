@@ -27,6 +27,12 @@ void Suite::toOs(std::ostream & os) const
 	os << "Room type: Suite \n";
 }
 
+void Suite::decorateRoom() const
+{
+	Room::decorateRoom();
+	cout << "     &.&& Wine is waiting in your room &&.&\n";
+}
+
 void Suite::setBalconySize(int balconySize) throw(const char *)
 {
 	if ((balconySize >= MIN_BALCONY_SIZE) && (balconySize <= MAX_BALCONY_SIZE))

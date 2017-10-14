@@ -24,19 +24,19 @@ void Receptionist::toOs(std::ostream & os) const
 	os << "Title: Receptionist\n";
 }
 
-int Receptionist::checkRoomAvailability(int numberOfGuests, Room ** rooms) throw(const char *)
+int Receptionist::checkRoomAvailability(int numberOfGuests, vector<Room*> rooms) const throw(const char *) 
 {
 	if ((numberOfGuests <= 0) || (numberOfGuests > Room::MAX_NUM_OF_BEDS))
 		throw "Invalid number of guests.\n";
-
-	int numOfRooms = NUM_OF_FLOORS*NUM_OF_ROOMS_PER_FLOOR;
-
-	for (int i = 0; i < numOfRooms; i++)
+	
+	vector<Room*>::const_iterator itrBegin = rooms.begin();
+	vector<Room*>::const_iterator itrEnd = rooms.end();
+	for (; itrBegin != itrEnd; ++itrBegin)
 	{
-		if ((*rooms[i]).getNumOfBeds() >= numberOfGuests)
+		if ((*itrBegin)->getNumOfBeds() >= numberOfGuests)
 		{
-			if ((*rooms[i]).getNumberOfGuests() == 0)
-				return (*rooms[i]).getRoomNumber();
+			if ((*itrBegin)->getNumberOfGuests() == 0)
+				return (*itrBegin)->getRoomNumber();
 		}
 	}
 

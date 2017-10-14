@@ -2,10 +2,11 @@
 #ifndef __EMPLOYEE_H
 #define __EMPLOYEE_H
 #include "person.h"
+#include "Visitor.h"
 #include <iostream>
 
 
-class Employee : public Person {
+class Employee : public Person, public IVisitable {
 protected:
 	float salary;
 	Employee(const Employee& other);
@@ -22,6 +23,7 @@ public:
 	//getters and setters
 	void setSalary(float salary) throw (const char*);
 	friend std::ostream& operator<< (std::ostream& os, const Person& e);
+	virtual void accept(IVisitor* visitor);
 
 	float getSalary() const;
 };
