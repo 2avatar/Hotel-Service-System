@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DiningRoom" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAEAAAQAAACAIggAABEEhAAAAAAA=</HashCode>
+      <FileName>diningRoom.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Employee" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAgAAIgAAAAAAAACAAAAAAAAgAgAAAAAAA=</HashCode>
+      <FileName>employee.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hotel" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICEAgGAKAAAYBIAABAMgAQAAAAAEAQBQEAC0AEIAAAA=</HashCode>
+      <FileName>hotel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HouseKeeper" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAEAAAAABgAAAAAAA=</HashCode>
+      <FileName>houseKeeper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Person" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoAAAAAAEAAAQAAAAAAAAAAAAAAEAABAIAAkAAAAAgA=</HashCode>
+      <FileName>person.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Receptionist" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAEAAAAAACAIAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>receptionist.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Room" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAACAAAEIAIAAggYJAACQCCAAkAAEAAAQAgCAEAAAA=</HashCode>
+      <FileName>room.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RoomService" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEgAAAAAgAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>roomService.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShiftManager" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAA=</HashCode>
+      <FileName>shiftManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Suite" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAABEAAAAAAAAAAAAAAAAAAAAAAAAAEgAAAAAAA=</HashCode>
+      <FileName>suite.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,16 @@
+﻿  suite.cpp
+  shiftManager.cpp
+  roomService.cpp
+  room.cpp
+  receptionist.cpp
+  person.cpp
+  main.cpp
+c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\main.cpp(404): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+  houseKeeper.cpp
+  hotel.cpp
+c:\users\eviat\documents\visual studio 2015\projects\hotel-part2\hotel\hotel.cpp(369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  employee.cpp
+  diningRoom.cpp
+  Generating Code...
+  Hotel.vcxproj -> C:\Users\eviat\Documents\Visual Studio 2015\Projects\Hotel-Part2\x64\Debug\Hotel.exe
+  Hotel.vcxproj -> C:\Users\eviat\Documents\Visual Studio 2015\Projects\Hotel-Part2\x64\Debug\Hotel.pdb (Full PDB)
