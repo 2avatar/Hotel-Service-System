@@ -249,7 +249,7 @@ void Hotel::closeDRGates() const
 
 void Hotel::registerRoomToDR(int roomNumber)
 {
-	diningRoom += roomNumber;
+	*diningRoom += roomNumber;
 }
 
 bool Hotel::handleComplaint(int roomNumber, const string& complaint) const
